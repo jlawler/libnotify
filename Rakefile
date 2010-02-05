@@ -23,8 +23,21 @@ begin
     gem.test_files = Dir.glob('test/test_*.rb')
   end
   Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+rescue LoadError => e
+  missing_file = nil
+  if e.message=~/no such file to load --\s+(\S+)/
+    missing_file = $1
+  end
+
+  if missing_file.nil?
+    puts "Error: #{e.message}"
+    puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler" 
+  elsif missing_file=='jeweler' 
+    puts "Jeweler not available. Install it with: gem install jeweler"
+  else
+    puts "Error: #{missing_file} not found"
+    puts "Jeweler (or a dependency) not available." 
+  end
 end
 
 # Test
